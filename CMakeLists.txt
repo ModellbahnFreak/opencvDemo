@@ -9,6 +9,7 @@ add_executable(OpenCVDemo src/main.cpp)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     SET (CMAKE_GENERATOR "Win32")
+    set_property(TARGET OpenCVDemo PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 endif()
 
 target_link_libraries( OpenCVDemo ${OpenCV_LIBS} )
