@@ -1,7 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-//using namespace cv;
+
 /**
  * @brief Entry point of the executable
  * @param argc Number of command line arguments passed
