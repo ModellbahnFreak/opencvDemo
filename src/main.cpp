@@ -1,5 +1,12 @@
+/**
+ * @file
+ * Main enty point for the demo application
+ * @author GR
+ */
+
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include "../include/loadmanipulate.hpp"
 
 /**
  * @brief Entry point of the executable
@@ -17,7 +24,6 @@ int main(int argc, char** argv) {
     loadedImage = cv::imread("./opencv.png");
     cv::Mat cropped = cv::Mat(loadedImage, cv::Rect(150, 150, 100, 100));
     std::cout << "Image loaded" << std::endl;
-
 
     cv::imshow("An image", loadedImage);
     cv::waitKey();
