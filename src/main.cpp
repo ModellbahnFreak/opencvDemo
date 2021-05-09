@@ -16,23 +16,38 @@
  * value else
  */
 int main(int argc, char** argv) {
+    bool useGui = true;
+    if (argc >= 2) {
+        std::string mode = argv[1];
+        if (mode == "noGui") {
+            useGui = false;
+            std::cout << "Starting without gui" << std::endl;
+        }
+    }
+
     cv::Mat emptyImg(100, 100, CV_8UC3, cv::Scalar(255, 0, 0));
-    cv::imshow("An image", emptyImg);
-    cv::waitKey();
+    if (useGui) {
+        cv::imshow("An image", emptyImg);
+        cv::waitKey();
+    }
 
     cv::Mat loadedImage;
     loadedImage = cv::imread("./opencv.png");
     cv::Mat cropped = cv::Mat(loadedImage, cv::Rect(150, 150, 100, 100));
     std::cout << "Image loaded" << std::endl;
 
-    cv::imshow("An image", loadedImage);
-    cv::waitKey();
-    std::cout << "Key pressed" << std::endl;
+    if (useGui) {
+        cv::imshow("An image", loadedImage);
+        cv::waitKey();
+        std::cout << "Key pressed" << std::endl;
+    }
 
     cv::GaussianBlur(loadedImage, loadedImage, cv::Size(101, 101), 5);
 
-    cv::imshow("An image", cropped);
-    cv::waitKey();
+    if (useGui) {
+        cv::imshow("An image", cropped);
+        cv::waitKey();
+    }
 
     return 0;
 }
