@@ -1,23 +1,43 @@
-# This file is a template, and might need editing before it works on your project.
-# use the official gcc image, based on debian
-# can use verions as well, like gcc:5.2
-# see https://hub.docker.com/_/gcc/
-#image: gcc
+image: git.rss.iste.uni-stuttgart.de:5050/pse/pipeline-test/opencv
 
 build:
     stage: build
-    before_script:
-        - apt update && apt -y install make autoconf cmake
     script:
         - cmake .
-        - cmake --build
+        - cmake --build .
+    artifacts:
+        untracked: true
+        expire_in: 1 hrs
 
 test:
     stage: test
+    dependencies: 
+        - build
     script:
-        - ctest --help
+        - ctest
 
 checkFormat:
     stage: test
     script:
-        - clang-format -i src/* -n -Werror
+        - clang-format src/* -n -Werror
+        - clang-format include/* -n -Werror
+        - clang-format test/* -n -Werror
+
+findMemleaks:
+    stage: test
+    dependencies: 
+        - build
+    script:
+        - valgrind --leak-check=yes ./OpenCVTests
+        - valgrind --leak-check=yes ./OpenCVDemo noGui
+
+deployDoc:
+    stage: test
+    script:
+        - doxygen
+        - cd generated_doc/latex && make
+    artifacts:
+        paths:
+            - generated_doc/latex/*.pdf
+            - generated_doc/html/*
+        expire_in: 2 days
