@@ -56,6 +56,9 @@ buildWindows:
     stage: build
     tags:
         - windows-10
+    before_script:
+        - dir "C:\Program Files\"
+        - dir "C:\Program Files (x86)\"
     script:
         - cmake .
         - cmake --build .
