@@ -36,8 +36,8 @@ findMemleaksLinux:
     dependencies: 
         - buildLinux
     script:
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all ./OpenCVTests )
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all ./OpenCVDemo noGui )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all --suppressions=/usr/share/opencv4/valgrind.supp --suppressions=/usr/share/opencv4/valgrind_3rdparty.supp ./OpenCVTests )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all --suppressions=/usr/share/opencv4/valgrind.supp --suppressions=/usr/share/opencv4/valgrind_3rdparty.supp ./OpenCVDemo noGui )
 
 deployDoc:
     stage: test
