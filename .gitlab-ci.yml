@@ -4,58 +4,48 @@ buildLinux:
     stage: build
     tags:
         - ubuntu-20.04
-    before_script:
-        - cat /proc/self/cgroup
     script:
-        - cmake .
-        - cmake --build .
+        -  ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake . )
+        -  ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake --build . )
     artifacts:
         untracked: true
         expire_in: 1 hrs
 
 testLinux:
     stage: test
-    before_script:
-        - cat /proc/self/cgroup
     tags:
         - ubuntu-20.04
     dependencies: 
         - buildLinux
     script:
-        - ctest
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && ctest )
 
 checkFormat:
     stage: test
-    before_script:
-        - cat /proc/self/cgroup
     tags:
         - ubuntu-20.04
     script:
-        - clang-format src/* -n -Werror
-        - clang-format include/* -n -Werror
-        - clang-format test/* -n -Werror
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && clang-format src/* -n -Werror )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && clang-format include/* -n -Werror )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && clang-format test/* -n -Werror )
 
 findMemleaksLinux:
     stage: test
-    before_script:
-        - cat /proc/self/cgroup
     tags:
         - ubuntu-20.04
     dependencies: 
         - buildLinux
     script:
-        - valgrind --leak-check=yes ./OpenCVTests
-        - valgrind --leak-check=yes ./OpenCVDemo noGui
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes ./OpenCVTests )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes ./OpenCVDemo noGui )
 
 deployDoc:
     stage: test
-    before_script:
-        - cat /proc/self/cgroup
     tags:
         - ubuntu-20.04
     script:
-        - doxygen
-        - cd generated_doc/latex && make
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && doxygen )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cd generated_doc/latex && make )
     artifacts:
         paths:
             - generated_doc/latex/*.pdf
