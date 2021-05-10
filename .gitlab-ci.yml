@@ -36,8 +36,8 @@ findMemleaksLinux:
     dependencies: 
         - buildLinux
     script:
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes ./OpenCVTests )
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes ./OpenCVDemo noGui )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 ./OpenCVTests )
+        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 ./OpenCVDemo noGui )
 
 deployDoc:
     stage: test
