@@ -51,3 +51,23 @@ deployDoc:
             - generated_doc/latex/*.pdf
             - generated_doc/html/*
         expire_in: 2 days
+
+buildWindows:
+    stage: build
+    tags:
+        - windows-10
+    script:
+        - cmake .
+        - cmake --build .
+    artifacts:
+        untracked: true
+        expire_in: 1 hrs
+
+testWindows:
+    stage: test
+    tags:
+        - windows-10
+    dependencies: 
+        - buildWindows
+    script:
+        - ctest
