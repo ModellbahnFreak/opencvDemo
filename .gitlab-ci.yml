@@ -86,7 +86,7 @@ buildWindows:
     #    - buildDepsWindows
     #needs: ["buildDepsWindows"]
     before_script:
-        - powershell -ExecutionPolicy Unrestricted .\docker\prepareDocs.ps1
+        - powershell .\docker\prepareDeps.ps1
     script:
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake .
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake --build .
