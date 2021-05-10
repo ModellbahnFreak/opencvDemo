@@ -5,6 +5,8 @@ mkdir deps -ErrorAction SilentlyContinue
 cd deps
 $DEPS_DIR=pwd
 try {
+    $oldActPref = $ErrorActionPreference
+    $ErrorActionPreference = "stop"
     Get-Command cmake
 } catch {
     if (! (Test-Path cmake.zip)) {
@@ -13,6 +15,8 @@ try {
     if (! (Test-Path cmake)) {
         Expand-Archive -Path cmake.zip
     }
+} finally {
+    $ErrorActionPreference = $oldActPref
 }
 $NEED_RECOMPILE=$false
 if (Test-Path $DEPS_DIR\opencv) {
