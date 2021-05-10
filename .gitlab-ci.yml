@@ -60,15 +60,20 @@ buildWindows:
         - dir "C:\Program Files\"
         - dir "C:\Program Files (x86)\"
         - $env:PATH = $env:PATH + ";C:\Program Files\7-Zip"
-        - mkdir cmake -ErrorAction SilentlyContinue
-        - Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-windows-x86_64.zip -OutFile cmake\cmake.zip
-        - 7z.exe x -o"cmake\cmake" "cmake\cmake.zip"
+        - mkdir deps -ErrorAction SilentlyContinue
+        - Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-windows-x86_64.zip -OutFile deps\cmake.zip
+        - 7z.exe x -o"deps\cmake" "deps\cmake.zip"
+        - tree
     script:
-        - .\cmake\cmake\bin\cmake .
-        - .\cmake\cmake\bin\cmake --build .
+        - .\deps\cmake\bin\cmake .
+        - .\deps\cmake\bin\cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
+    cache:
+        key: cmake-download
+        paths:
+            - deps/
 
 testWindows:
     stage: test
