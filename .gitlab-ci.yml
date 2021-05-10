@@ -1,7 +1,9 @@
-image: debian:unstable
+#image: debian:unstable
 
-build:
+buildLinux:
     stage: build
+    tags:
+        - ubuntu-20.04
     before_script:
         - cat /proc/self/cgroup
     script:
@@ -11,8 +13,10 @@ build:
         untracked: true
         expire_in: 1 hrs
 
-test:
+testLinux:
     stage: test
+    tags:
+        - ubuntu-20.04
     dependencies: 
         - build
     script:
@@ -20,13 +24,17 @@ test:
 
 checkFormat:
     stage: test
+    tags:
+        - ubuntu-20.04
     script:
         - clang-format src/* -n -Werror
         - clang-format include/* -n -Werror
         - clang-format test/* -n -Werror
 
-findMemleaks:
+findMemleaksLinux:
     stage: test
+    tags:
+        - ubuntu-20.04
     dependencies: 
         - build
     script:
@@ -35,6 +43,8 @@ findMemleaks:
 
 deployDoc:
     stage: test
+    tags:
+        - ubuntu-20.04
     script:
         - doxygen
         - cd generated_doc/latex && make
