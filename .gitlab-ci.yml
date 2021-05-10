@@ -1,6 +1,5 @@
-image: git.rss.iste.uni-stuttgart.de:5050/pse/pipeline-test/opencv
-
 build:
+    tags: [ubuntu-20.04]
     stage: build
     script:
         - cmake .
@@ -10,6 +9,7 @@ build:
         expire_in: 1 hrs
 
 test:
+    tags: [ubuntu-20.04]
     stage: test
     dependencies: 
         - build
@@ -17,6 +17,7 @@ test:
         - ctest
 
 checkFormat:
+    tags: [ubuntu-20.04]
     stage: test
     script:
         - clang-format src/* -n -Werror
@@ -24,6 +25,7 @@ checkFormat:
         - clang-format test/* -n -Werror
 
 findMemleaks:
+    tags: [ubuntu-20.04]
     stage: test
     dependencies: 
         - build
@@ -32,6 +34,7 @@ findMemleaks:
         - valgrind --leak-check=yes ./OpenCVDemo noGui
 
 deployDoc:
+    tags: [ubuntu-20.04]
     stage: test
     script:
         - doxygen
