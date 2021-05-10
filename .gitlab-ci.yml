@@ -66,6 +66,8 @@ deployDoc:
 buildDepsWindows:
     stage: prepare
     needs: []
+    before_script:
+        - Get-Command powershell.exe
     script:
         - powershell.exe docker\prepareDeps.ps1
     cache:
