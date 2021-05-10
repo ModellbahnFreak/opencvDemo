@@ -65,8 +65,8 @@ buildWindows:
         - 7z.exe x -o"deps\cmake" "deps\cmake.zip"
         - tree
     script:
-        - .\deps\cmake\bin\cmake .
-        - .\deps\cmake\bin\cmake --build .
+        - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake .
+        - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
@@ -82,4 +82,4 @@ testWindows:
     dependencies: 
         - buildWindows
     script:
-        - .\cmake\cmake\bin\ctest
+        - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\ctest
