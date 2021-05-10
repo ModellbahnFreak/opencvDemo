@@ -18,7 +18,7 @@ testLinux:
     tags:
         - ubuntu-20.04
     dependencies: 
-        - build
+        - buildLinux
     script:
         - ctest
 
@@ -36,7 +36,7 @@ findMemleaksLinux:
     tags:
         - ubuntu-20.04
     dependencies: 
-        - build
+        - buildLinux
     script:
         - valgrind --leak-check=yes ./OpenCVTests
         - valgrind --leak-check=yes ./OpenCVDemo noGui
