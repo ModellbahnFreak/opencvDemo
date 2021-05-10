@@ -63,34 +63,40 @@ deployDoc:
             - generated_doc/html/*
         expire_in: 2 days
 
-buildDepsWindows:
-    stage: prepare
-    needs: []
-    before_script:
-        - Get-Command powershell.exe
-    script:
-        - powershell -ExecutionPolicy Unrestricted .\docker\prepareDocs.ps1
-    cache:
-        key: dependency-download
-        paths:
-            - deps/
-    artifacts:
-        untracked: true
-        expire_in: 20 mins
+#buildDepsWindows:
+#    stage: prepare
+#    needs: []
+#    before_script:
+#        - Get-Command powershell.exe
+#    script:
+#        - powershell -ExecutionPolicy Unrestricted .\docker\prepareDocs.ps1
+#    cache:
+#        key: dependency-download
+#        paths:
+#            - deps/
+#    artifacts:
+#        untracked: true
+#        expire_in: 20 mins
 
 buildWindows:
     stage: build
     tags:
         - windows-10
-    dependencies:
-        - buildDepsWindows
-    needs: ["buildDepsWindows"]
+    #dependencies:
+    #    - buildDepsWindows
+    #needs: ["buildDepsWindows"]
+    before_script:
+        - powershell -ExecutionPolicy Unrestricted .\docker\prepareDocs.ps1
     script:
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake .
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
+    cache:
+        key: dependency-download
+        paths:
+            - deps/
 
 testWindows:
     stage: test
