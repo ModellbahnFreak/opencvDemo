@@ -1,7 +1,10 @@
-image: git.rss.iste.uni-stuttgart.de:5050/pse/pipeline-test/opencv
+#image: git.rss.iste.uni-stuttgart.de:5050/pse/pipeline-test/opencv
 
 build:
     stage: build
+    before_script:
+        - gitlab-runner --version
+        - cat /proc/self/cgroup
     script:
         - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake . )
         - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake --build . )
