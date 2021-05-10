@@ -69,7 +69,7 @@ buildDepsWindows:
     before_script:
         - Get-Command powershell.exe
     script:
-        - powershell.exe docker\prepareDeps.ps1
+        - powershell -ExecutionPolicy Unrestricted .\docker\prepareDocs.ps1
     cache:
         key: dependency-download
         paths:
@@ -82,7 +82,7 @@ buildWindows:
     stage: build
     tags:
         - windows-10
-    dependencies: 
+    dependencies:
         - buildDepsWindows
     needs: ["buildDepsWindows"]
     script:
