@@ -59,9 +59,13 @@ buildWindows:
     before_script:
         - dir "C:\Program Files\"
         - dir "C:\Program Files (x86)\"
+        - $env:PATH = $env:PATH + ";C:\Program Files\7-Zip"
+        - mkdir cmake -ErrorAction SilentlyContinue
+        - Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-windows-x86_64.zip -OutFile cmake\cmake.zip
+        - 7z.exe x -o"cmake\cmake" "cmake\cmake.zip"
     script:
-        - cmake .
-        - cmake --build .
+        - .\cmake\cmake\bin\cmake .
+        - .\cmake\cmake\bin\cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
@@ -73,4 +77,4 @@ testWindows:
     dependencies: 
         - buildWindows
     script:
-        - ctest
+        - .\cmake\cmake\bin\ctest
