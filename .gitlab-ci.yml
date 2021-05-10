@@ -1,9 +1,16 @@
 #image: debian:unstable
 
+stages:
+    - prepare
+    - build
+    - test
+    - deploy
+
 buildLinux:
     stage: build
     tags:
         - ubuntu-20.04
+    needs: []
     script:
         -  ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake . )
         -  ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake --build . )
@@ -15,6 +22,7 @@ testLinux:
     stage: test
     tags:
         - ubuntu-20.04
+    needs: ["buildLinux"]
     dependencies: 
         - buildLinux
     script:
@@ -24,6 +32,7 @@ checkFormat:
     stage: test
     tags:
         - ubuntu-20.04
+    needs: []
     script:
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && clang-format src/* -n -Werror )
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && clang-format include/* -n -Werror )
@@ -35,14 +44,16 @@ findMemleaksLinux:
         - ubuntu-20.04
     dependencies: 
         - buildLinux
+    needs: ["buildLinux"]
     script:
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all --suppressions=/usr/share/opencv4/valgrind.supp --suppressions=/usr/share/opencv4/valgrind_3rdparty.supp ./OpenCVTests )
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && valgrind --leak-check=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all --suppressions=/usr/share/opencv4/valgrind.supp --suppressions=/usr/share/opencv4/valgrind_3rdparty.supp ./OpenCVDemo noGui )
 
 deployDoc:
-    stage: test
+    stage: deploy
     tags:
         - ubuntu-20.04
+    needs: []
     script:
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && doxygen )
         - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cd generated_doc/latex && make )
@@ -52,28 +63,32 @@ deployDoc:
             - generated_doc/html/*
         expire_in: 2 days
 
+buildDepsWindows:
+    stage: prepare
+    needs: []
+    script:
+        - powershell.exe docker\prepareDeps.ps1
+    cache:
+        key: dependency-download
+        paths:
+            - deps/
+    artifacts:
+        untracked: true
+        expire_in: 20 mins
+
 buildWindows:
     stage: build
     tags:
         - windows-10
-    before_script:
-        - dir "C:\Program Files\"
-        - dir "C:\Program Files (x86)\"
-        - $env:PATH = $env:PATH + ";C:\Program Files\7-Zip"
-        - mkdir deps -ErrorAction SilentlyContinue
-        - Invoke-WebRequest https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-windows-x86_64.zip -OutFile deps\cmake.zip
-        - 7z.exe x -o"deps\cmake" "deps\cmake.zip"
-        - tree
+    dependencies: 
+        - buildDepsWindows
+    needs: ["buildDepsWindows"]
     script:
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake .
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
-    cache:
-        key: cmake-download
-        paths:
-            - deps/
 
 testWindows:
     stage: test
@@ -81,5 +96,6 @@ testWindows:
         - windows-10
     dependencies: 
         - buildWindows
+    needs: ["buildWindows"]
     script:
         - .\deps\cmake\cmake-3.20.2-windows-x86_64\bin\ctest
