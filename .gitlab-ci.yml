@@ -7,8 +7,8 @@ buildLinux:
     before_script:
         - cat /proc/self/cgroup
     script:
-        - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake . )
-        - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake --build . )
+        - cmake .
+        - cmake --build .
     artifacts:
         untracked: true
         expire_in: 1 hrs
