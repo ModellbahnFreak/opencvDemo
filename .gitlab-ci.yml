@@ -3,8 +3,8 @@ image: git.rss.iste.uni-stuttgart.de:5050/pse/pipeline-test/opencv
 build:
     stage: build
     script:
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake . )
-        - ( trap 'echo WorkingAround; sleep 1; echo end' EXIT && cmake --build . )
+        - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake . )
+        - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake --build . )
     artifacts:
         untracked: true
         expire_in: 1 hrs
