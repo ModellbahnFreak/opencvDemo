@@ -3,8 +3,7 @@
 build:
     stage: build
     before_script:
-        - gitlab-runner --version
-        - cat /proc/self/cgroup
+        - apt update
     script:
         - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake . )
         - ( trap 'echo Finishing...; sleep 3; echo Finished' EXIT && cmake --build . )
